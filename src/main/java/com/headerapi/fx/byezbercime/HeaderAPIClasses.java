@@ -1,11 +1,19 @@
 package com.headerapi.fx.byezbercime;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.headerapi.fx.byezbercime.managers.HeaderDownloadManager;
 import com.headerapi.fx.byezbercime.provider.SkinsGenerator;
 import com.headerapi.fx.byezbercime.util.SkinTextures;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mineskin.data.Skin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -49,18 +57,8 @@ public final class HeaderAPIClasses extends JavaPlugin {
     public void onEnable() {
         this.skinsValidate = new HashMap<>();
 
-        generateHeads();
+        getSkinsGenerator().loadSkins();
 
-
-    }
-
-    private void generateHeads() {
-        List<File> skins = Arrays.asList(getSkinsDirectory().listFiles());
-        if (skins != null && !skins.isEmpty()) {
-            for (File skin : skins) {
-                getSkinsGenerator().generateSkins(skin);
-            }
-        }
     }
 
     private void files() {
@@ -82,6 +80,10 @@ public final class HeaderAPIClasses extends JavaPlugin {
 
 
 
+    }
+
+    public HeaderDownloadManager getHeaderManager() {
+        return headerManager;
     }
 
     public File getDataDirectory() {

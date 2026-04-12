@@ -102,9 +102,17 @@ public class HeaderDownloadManager {
                 if (generatedEntryZip != null) {
                     while (generatedEntryZip != null) {
 
-                        File skinFile = new File(to,generatedEntryZip.getName());
-                        FileOutputStream  outputStream = new FileOutputStream(skinFile);
-                        outputStream.write(zipInputStream.readAllBytes());
+                        File skinFile = new File(to, generatedEntryZip.getName());
+                        skinFile.getParentFile().mkdirs();
+
+                        try (FileOutputStream fos = new FileOutputStream(skinFile)) {
+                            byte[] buffer = new byte[1024];
+                            int len;
+                            while ((len = zipInputStream.read(buffer)) > 0) {
+                                fos.write(buffer, 0, len);
+                            }
+                            fos.flush();
+                        }
 
                         HeaderAPIClasses.getInstance().getCore().broadcast("&e" + generatedEntryZip.getName() + " &7skin file is unconvorted to "+ HeaderAPIClasses.SKIN_ZIP + "&8 " + (System.currentTimeMillis()  - start) + " ms.");
                         generatedEntryZip = zipInputStream.getNextEntry();
@@ -118,7 +126,7 @@ public class HeaderDownloadManager {
                 List<File> pngFilesList = Arrays.stream(to.listFiles()).toList();
                 if (!pngFilesList.isEmpty()) {
                     for (File pngs : pngFilesList) {
-                        File targetFile = new File(to,GENERATE_NAME + ":"+pngs.getName());
+                        File targetFile = new File(to,GENERATE_NAME + "-"+pngs.getName());
                         String skinFileName = targetFile.getName();
 
                         pngs.renameTo(targetFile);
