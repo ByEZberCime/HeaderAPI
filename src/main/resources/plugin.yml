@@ -1,5 +1,5 @@
 name: HeaderAPI
-version: 'v1.0'
+version: '1.0'
 
 main: com.headerapi.fx.byezbercime.HeaderAPIClasses
 
